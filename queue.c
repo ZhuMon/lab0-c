@@ -1,9 +1,10 @@
+#include "queue.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "harness.h"
-#include "queue.h"
 
 /*
  * Create empty queue.
@@ -56,7 +57,15 @@ bool q_insert_tail(queue_t *q, char *s)
     /* TODO: You need to write the complete code for this function */
     /* Remember: It should operate in O(1) time */
     /* TODO: Remove the above comment when you are about to implement. */
-    return false;
+    if (q == NULL) {
+        return false;
+    }
+    list_ele_t *newt;  // newt means new element in tail
+    newt = malloc(sizeof(list_ele_t));
+    newt->value = s;
+    q->tail = newt;
+
+    return true;
 }
 
 /*
@@ -81,10 +90,7 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
  */
 int q_size(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* Remember: It should operate in O(1) time */
-    /* TODO: Remove the above comment when you are about to implement. */
-    return 0;
+    return q->size;
 }
 
 /*
