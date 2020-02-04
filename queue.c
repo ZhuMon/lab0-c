@@ -77,7 +77,14 @@ bool q_insert_tail(queue_t *q, char *s)
 
     newt->value = malloc(sizeof(char) * strlen(s) + 1);
     strncpy(newt->value, s, strlen(s) + 1);
-    q->tail = newt;
+    newt->next = NULL;
+    if (q->tail == NULL) {
+        q->tail = newt;
+        q->head = newt;
+    } else {
+        q->tail->next = newt;
+        q->tail = newt;
+    }
 
     q->size += 1;
     return true;
