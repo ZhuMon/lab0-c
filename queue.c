@@ -44,10 +44,11 @@ bool q_insert_head(queue_t *q, char *s)
     if (newh == NULL || q == NULL) {
         return false;
     }
+
+    // Allocate space and copy the string
     newh->value = malloc(sizeof(char) * (strlen(s) + 1));
     strncpy(newh->value, s, strlen(s) + 1);
-    /* Don't forget to allocate space for the string and copy it */
-    /* What if either call to malloc returns NULL? */
+
     newh->next = q->head;
     q->head = newh;
 
