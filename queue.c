@@ -27,6 +27,17 @@ void q_free(queue_t *q)
 {
     /* TODO: How about freeing the list elements and the strings? */
     /* Free queue structure */
+    if (!q)
+        return;
+
+    list_ele_t *tmp = q->head;
+    while (q->head && q->tail) {
+        q->head = q->head->next;
+        tmp->next = NULL;
+        free(tmp->value);
+        free(tmp);
+        tmp = q->head;
+    }
     free(q);
 }
 
@@ -100,15 +111,15 @@ bool q_insert_tail(queue_t *q, char *s)
  */
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
-    /* TODO: You need to fix up this code. */
-    /* TODO: Remove the above comment when you are about to implement. */
     if (q == NULL || q->head == NULL) {
         return false;
     }
     if (sp != NULL) {
         strncpy(sp, q->head->value, bufsize - 1);
     }
+
     list_ele_t *tmp;
+
     tmp = q->head;
     q->head = q->head->next;
     tmp->next = NULL;
@@ -171,8 +182,88 @@ void q_reverse(queue_t *q)
  * No effect if q is NULL or empty. In addition, if q has only one
  * element, do nothing.
  */
+list_ele_t *merge(list_ele_t *l1, list_ele_t *l2)
+{
+    // merge with recursive
+    if (!l1)
+        return l1;
+    if (!l2)
+        return l2;
+
+    int result = strcmp(l1->value, l2->value);
+    if (result < 0) {
+        l1->next = merge(l1->next, l2);
+        return l1;
+    } else {
+        l2->next = merge(l1, l2->next);
+        return l2;
+    }
+}
+
+list_ele_t *mergeSortList(list_ele_t *head)
+{
+    if (!head || !head->next)
+        return head;
+
+    list_ele_t *fast = head->next;
+    list_ele_t *slow = head;
+
+    // split list
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    fast = slow->next;
+    slow->next = NULL;
+
+    // sort each list
+    list_ele_t *l1 = mergeSortList(head);
+    list_ele_t *l2 = mergeSortList(fast);
+
+    // merge sorted l1 and sorted l2
+    return merge(l1, l2);
+}
+
 void q_sort(queue_t *q)
 {
     /* TODO: You need to write the code for this function */
     /* TODO: Remove the above comment when you are about to implement. */
+
+    // if q has only one element or q is empty, q->head == q->tail
+    if (!q || q->head == q->tail) {
+        return;
+    }
+
+    // Merge sort
+    /*q->head = mergeSortList(q->head);*/
+
+    // Bubble sort
+    list_ele_t *curr, *prev, *tmp;
+    for (int i = q_size(q); i > 0; i--) {
+        curr = q->head;
+        prev = q->head;
+        for (int j = 0; j < i - 1 && curr->next; j++) {
+            // Compares two elements, and swaps if current is bigger than next
+            if (strcmp(curr->value, curr->next->value) > 0) {
+                tmp = curr->next;
+                curr->next = tmp->next;
+                tmp->next = curr;
+                // In linked list, swap has two case. In head or not.
+                if (curr == q->head) {
+                    q->head = tmp;
+                    prev = tmp;
+                } else {
+                    prev->next = tmp;
+                    prev = prev->next;
+                }
+            } else {
+                curr = curr->next;
+                if (j != 0)
+                    prev = prev->next;
+            }
+        }
+    }
+    while (q->tail->next) {
+        q->tail = q->tail->next;
+    }
 }
