@@ -64,6 +64,10 @@ bool q_insert_head(queue_t *q, char *s)
     // first time
     if (q->tail == NULL) {
         q->tail = q->head;
+    } else {
+        while (q->tail->next) {
+            q->tail = q->tail->next;
+        }
     }
 
     q->size += 1;
@@ -184,9 +188,9 @@ list_ele_t *merge(list_ele_t *l1, list_ele_t *l2)
 {
     // merge with recursive
     if (!l1)
-        return l1;
-    if (!l2)
         return l2;
+    if (!l2)
+        return l1;
 
     int result = strcmp(l1->value, l2->value);
     if (result < 0) {
@@ -233,34 +237,8 @@ void q_sort(queue_t *q)
     }
 
     // Merge sort
-    /*q->head = mergeSortList(q->head);*/
+    q->head = mergeSortList(q->head);
 
-    // Bubble sort
-    list_ele_t *curr, *prev, *tmp;
-    for (int i = q_size(q); i > 0; i--) {
-        curr = q->head;
-        prev = q->head;
-        for (int j = 0; j < i - 1 && curr->next; j++) {
-            // Compares two elements, and swaps if current is bigger than next
-            if (strcmp(curr->value, curr->next->value) > 0) {
-                tmp = curr->next;
-                curr->next = tmp->next;
-                tmp->next = curr;
-                // In linked list, swap has two case. In head or not.
-                if (curr == q->head) {
-                    q->head = tmp;
-                    prev = tmp;
-                } else {
-                    prev->next = tmp;
-                    prev = prev->next;
-                }
-            } else {
-                curr = curr->next;
-                if (j != 0)
-                    prev = prev->next;
-            }
-        }
-    }
     while (q->tail->next) {
         q->tail = q->tail->next;
     }
