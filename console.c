@@ -1,5 +1,7 @@
 /* Implementation of simple command-line interface */
 
+#include "console.h"
+
 #include <ctype.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -13,7 +15,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "console.h"
 #include "report.h"
 
 /* Some global values */
@@ -455,9 +456,7 @@ static bool push_file(char *fname)
     return true;
 }
 
-/* Pop a file buffer from stack.
- * Return true if stack is now empty
- */
+/* Pop a file buffer from stack */
 static void pop_file()
 {
     if (buf_stack) {

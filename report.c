@@ -1,3 +1,5 @@
+#include "report.h"
+
 #include <signal.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -8,8 +10,6 @@
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
-
-#include "report.h"
 
 #define MAX(a, b) ((a) < (b) ? (b) : (a))
 
