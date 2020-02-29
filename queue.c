@@ -49,10 +49,13 @@ void q_free(queue_t *q)
 bool q_insert_head(queue_t *q, char *s)
 {
     list_ele_t *newh;
-    newh = malloc(sizeof(list_ele_t));
-    if (newh == NULL || q == NULL) {
+    if (!q)
         return false;
-    }
+
+    // 分開檢查，避免多 malloc 導致 memory leak
+    newh = malloc(sizeof(list_ele_t));
+    if (!newh)
+        return false;
 
     // Allocate space and copy the string
     newh->value = malloc(sizeof(char) * (strlen(s) + 1));
@@ -84,10 +87,13 @@ bool q_insert_head(queue_t *q, char *s)
 bool q_insert_tail(queue_t *q, char *s)
 {
     list_ele_t *newt;  // newt means new element in tail
-    newt = malloc(sizeof(list_ele_t));
-    if (q == NULL || newt == NULL) {
+    if (!q)
         return false;
-    }
+
+    // 分開檢查，避免多 malloc 導致 memory leak
+    newt = malloc(sizeof(list_ele_t));
+    if (!newt)
+        return false;
 
     newt->value = malloc(sizeof(char) * strlen(s) + 1);
     strncpy(newt->value, s, strlen(s) + 1);
@@ -143,7 +149,7 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
  */
 int q_size(queue_t *q)
 {
-    return q->size;
+    return !q ? 0 : q->size;
 }
 
 /*
