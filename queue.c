@@ -48,11 +48,11 @@ void q_free(queue_t *q)
  */
 bool q_insert_head(queue_t *q, char *s)
 {
-    list_ele_t *newh;
     if (!q)
         return false;
 
-    // 分開檢查，避免多 malloc 導致 memory leak
+    // Check separately to avoid extra malloc cause memory leak
+    list_ele_t *newh;  // newh means new element in head
     newh = malloc(sizeof(list_ele_t));
     if (!newh)
         return false;
@@ -86,11 +86,11 @@ bool q_insert_head(queue_t *q, char *s)
  */
 bool q_insert_tail(queue_t *q, char *s)
 {
-    list_ele_t *newt;  // newt means new element in tail
     if (!q)
         return false;
 
-    // 分開檢查，避免多 malloc 導致 memory leak
+    // Check separately to avoid extra malloc cause memory leak
+    list_ele_t *newt;  // newt means new element in tail
     newt = malloc(sizeof(list_ele_t));
     if (!newt)
         return false;
