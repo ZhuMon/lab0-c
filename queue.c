@@ -54,12 +54,18 @@ bool q_insert_head(queue_t *q, char *s)
     // Check separately to avoid extra malloc cause memory leak
     list_ele_t *newh;  // newh means new element in head
     newh = malloc(sizeof(list_ele_t));
-    if (!newh)
+    if (!newh) {
         return false;
+    }
 
     // Allocate space and copy the string
     newh->value = malloc(sizeof(char) * (strlen(s) + 1));
-    strncpy(newh->value, s, strlen(s) + 1);
+    if (!newh->value) {
+        free(newh);
+        return false;
+    }
+    memset(newh->value, '\0', strlen(s) + 1);
+    strncpy(newh->value, s, strlen(s));
 
     newh->next = q->head;
     q->head = newh;
@@ -96,7 +102,12 @@ bool q_insert_tail(queue_t *q, char *s)
         return false;
 
     newt->value = malloc(sizeof(char) * strlen(s) + 1);
-    strncpy(newt->value, s, strlen(s) + 1);
+    if (!newt->value) {
+        free(newt);
+        return false;
+    }
+    memset(newt->value, '\0', strlen(s) + 1);
+    strncpy(newt->value, s, strlen(s));
     newt->next = NULL;
     if (q->tail == NULL) {
         q->tail = q->head = newt;
