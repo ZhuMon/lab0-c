@@ -117,7 +117,12 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
         return false;
     }
     if (sp != NULL) {
-        strncpy(sp, q->head->value, bufsize - 1);
+        // Insure copy size is right
+        size_t realbufsize = (bufsize > strlen(q->head->value))
+                                 ? strlen(q->head->value)
+                                 : bufsize - 1;
+        memset(sp, '\0', realbufsize + 1);
+        strncpy(sp, q->head->value, realbufsize);
     }
 
     list_ele_t *tmp;
