@@ -206,41 +206,7 @@ void q_reverse(queue_t *q)
  * No effect if q is NULL or empty. In addition, if q has only one
  * element, do nothing.
  */
-list_ele_t *merge(list_ele_t *l1, list_ele_t *l2)
-{
-    // merge with pseudo node
-    list_ele_t *temp;
-
-    if (strcmp(l1->value, l2->value) < 0) {
-        temp = l1;
-        l1 = l1->next;
-    } else {
-        temp = l2;
-        l2 = l2->next;
-    }
-    list_ele_t *q = temp;
-
-    while (l1 && l2) {
-        if (strcmp(l1->value, l2->value) < 0) {  // l2 > l1
-            temp->next = l1;
-            temp = temp->next;
-            l1 = l1->next;
-        } else {
-            temp->next = l2;
-            temp = temp->next;
-            l2 = l2->next;
-        }
-    }
-
-    if (l1)
-        temp->next = l1;
-    if (l2)
-        temp->next = l2;
-
-    return q;
-}
-
-list_ele_t *mergeSortList(list_ele_t *head)
+list_ele_t *merge_sort(list_ele_t *head)
 {
     if (!head || !head->next)
         return head;
@@ -256,12 +222,40 @@ list_ele_t *mergeSortList(list_ele_t *head)
     fast = slow->next;
     slow->next = NULL;
 
-    // sort each list
-    list_ele_t *l1 = mergeSortList(head);
-    list_ele_t *l2 = mergeSortList(fast);
+    // Recursively split until each list exist one element
+    list_ele_t *l1 = merge_sort(head);
+    list_ele_t *l2 = merge_sort(fast);
 
     // merge sorted l1 and sorted l2
-    return merge(l1, l2);
+    list_ele_t *tmp;
+
+    if (strcmp(l1->value, l2->value) < 0) {  // l1 < l2
+        tmp = l1;
+        l1 = l1->next;
+    } else {
+        tmp = l2;
+        l2 = l2->next;
+    }
+
+    head = tmp;  // reuse head to record the head of new list
+
+    while (l1 && l2) {
+        if (strcmp(l1->value, l2->value) < 0) {
+            tmp->next = l1;
+            l1 = l1->next;
+        } else {
+            tmp->next = l2;
+            l2 = l2->next;
+        }
+        tmp = tmp->next;
+    }
+
+    if (l1)
+        tmp->next = l1;
+    if (l2)
+        tmp->next = l2;
+
+    return head;
 }
 
 void q_sort(queue_t *q)
@@ -272,7 +266,7 @@ void q_sort(queue_t *q)
     }
 
     // Merge sort
-    q->head = mergeSortList(q->head);
+    q->head = merge_sort(q->head);
 
     while (q->tail->next) {
         q->tail = q->tail->next;
