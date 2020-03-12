@@ -177,23 +177,19 @@ void q_reverse(queue_t *q)
         return;
     }
 
-    list_ele_t *prev, *now, *next;
-    prev = q->head;
-    now = q->head->next;
-    next = q->head->next->next;
-    // swap head and tail
-    q->head = q->tail;
-    q->tail = prev;
+    list_ele_t *tmp;
+    tmp = q->head->next;
+    q->tail->next = q->head;
 
-    prev->next = NULL;
-    now->next = prev;
-    while (next) {
-        prev = now;
-        now = next;
-        next = now->next;
-
-        now->next = prev;
+    while (tmp != q->tail) {
+        tmp = tmp->next;
+        q->head->next->next = q->tail->next;
+        q->tail->next = q->head->next;
+        q->head->next = tmp;
     }
+    q->tail = q->head;
+    q->head = q->head->next;
+    q->tail->next = NULL;
 }
 
 /*
