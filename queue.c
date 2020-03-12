@@ -181,14 +181,13 @@ void q_reverse(queue_t *q)
     prev = q->head;
     now = q->head->next;
     next = q->head->next->next;
-
     // swap head and tail
     q->head = q->tail;
     q->tail = prev;
 
     prev->next = NULL;
     now->next = prev;
-    while (!now->next) {
+    while (next) {
         prev = now;
         now = next;
         next = now->next;
