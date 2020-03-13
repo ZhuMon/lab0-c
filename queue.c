@@ -13,12 +13,11 @@
 queue_t *q_new()
 {
     queue_t *q = malloc(sizeof(queue_t));
-    if (q == NULL) {
-        return NULL;
+    if (q) {
+        q->head = NULL;
+        q->tail = NULL;
+        q->size = 0;
     }
-    q->head = NULL;
-    q->tail = NULL;
-    q->size = 0;
     return q;
 }
 
@@ -71,7 +70,7 @@ bool q_insert_head(queue_t *q, char *s)
     q->head = newh;
 
     // first time
-    if (q->tail == NULL) {
+    if (!q->tail) {
         q->tail = q->head;
     } else {
         while (q->tail->next) {
@@ -109,7 +108,7 @@ bool q_insert_tail(queue_t *q, char *s)
     memset(newt->value, '\0', strlen(s) + 1);
     strncpy(newt->value, s, strlen(s));
     newt->next = NULL;
-    if (q->tail == NULL) {
+    if (!q->tail) {
         q->tail = q->head = newt;
     } else {
         q->tail->next = newt;
@@ -130,10 +129,10 @@ bool q_insert_tail(queue_t *q, char *s)
  */
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
-    if (q == NULL || q->head == NULL) {
+    if (!q || !q->head) {
         return false;
     }
-    if (sp != NULL) {
+    if (sp) {
         // Insure copy size is right
         size_t realbufsize = (bufsize > strlen(q->head->value))
                                  ? strlen(q->head->value)
